@@ -5,9 +5,9 @@ IMPORTANT ❗ ❗ ❗ Please remember to destroy all the resources after each wo
 
 1. Authors:
 
-   ***enter your group nr***
+   ***gr-4***
 
-   ***link to forked repo***
+   ***https://github.com/dandon223/tbd-2023z-phase1***
    
 2. Fork https://github.com/bdg-tbd/tbd-2023z-phase1 and follow all steps in README.md.
 
