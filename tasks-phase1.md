@@ -60,15 +60,47 @@ resource "google_storage_bucket_iam_member" "tbd-data-bucket-iam-editor" {
 ```
 
 Create PR from this branch to **YOUR** master and merge it to make new release. 
-    
-***place the screenshot from GA after succesfull application of release with this changes***
+
 ![img.png](doc/figures/task_5_2.png)
     
 
 6. Analyze terraform code. Play with terraform plan, terraform graph to investigate different modules.
 
-    ***describe one selected module and put the output of terraform graph for this module here***
-   
+    Wybrany moduł: modules/composer
+
+    Pozwala on na zarządzanie przepływu pracy na platformie Apache Airflow.
+
+    Plik main.tf jest plikiem głównym, który zawiera opis zasobów jakie terraform powołuje dla tego modułu.
+    * Zasób google_service_account umożliwia zarządzaniem kontem usługi google cloud.
+    * Zasób google_project_iam_member pozwala przypisywać nowe role kontom google cloud.
+    * Zasób google_project_service umożliwia zarządzanie pojedynczą usługą API dla projektu platformy google cloud.
+    * Zasób google_compute_subnetwork tworzy podsieć w wirtualnej sieci projektu w podanym regionie.
+
+    Przy użyciu komendy ```terraform plan -out=plan``` w folderze modules/composer wyświetla się plan dla tego modułu oraz jest on zapisany w folderze plan. Należało podać niektóre zmienne ręcznie. Poniżej jest zamieszczona końcówka wyniku komendy.
+```
+  # module.composer.google_project_iam_member.composer_agent_service_account[0] will be created
+  + resource "google_project_iam_member" "composer_agent_service_account" {
+      + etag    = (known after apply)
+      + id      = (known after apply)
+      + member  = (known after apply)
+      + project = "tbd"
+      + role    = "roles/composer.ServiceAgentV2Ext"
+    }
+
+Plan: 8 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + data_service_account = (known after apply)
+  + gcs_bucket           = (known after apply)
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run "terraform apply" now.
+```
+
+Graf udalo się uzyskać poprzez użycie komendy ```terraform graph -plan=plan | dot -Tpng > graph.png``` w folderze modules/composer. 
+![img.png](doc/figures/graph.png)
+    
 7. Reach YARN UI
    
    ***place the port and the screenshot of YARN UI here***
