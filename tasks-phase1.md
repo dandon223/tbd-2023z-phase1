@@ -32,12 +32,37 @@ IMPORTANT ❗ ❗ ❗ Please remember to destroy all the resources after each wo
         * role   // follow the instruction above
         * member = "serviceAccount:${var.data_service_account}"
 
-    ***insert the link to the modified file and terraform snippet here***
+Link: <https://github.com/dandon223/tbd-2023z-phase1/blob/master/modules/data-pipeline/main.tf>
 
-    Create PR from this branch to **YOUR** master and merge it to make new release. 
+Terraform snipet:
+
+```
+
+resource "google_storage_bucket" "tbd-data-bucket" {
+  project                     = var.project_name
+  name                        = var.data_bucket_name
+  location                    = var.region
+  uniform_bucket_level_access = false #tfsec:ignore:google-storage-enable-ubla
+  force_destroy               = true
+
+  #checkov:skip=CKV_GCP_62: "Bucket should log access"
+  #checkov:skip=CKV_GCP_29: "Ensure that Cloud Storage buckets have uniform bucket-level access enabled"
+  #checkov:skip=CKV_GCP_78: "Ensure Cloud storage has versioning enabled"
+  public_access_prevention = "enforced"
+}
+
+resource "google_storage_bucket_iam_member" "tbd-data-bucket-iam-editor" {
+  bucket = google_storage_bucket.tbd-data-bucket.name
+  role   = "roles/storage.objectUser"
+  member = "serviceAccount:${var.data_service_account}"
+}
+
+```
+
+Create PR from this branch to **YOUR** master and merge it to make new release. 
     
-    ***place the screenshot from GA after succesfull application of release with this changes***
-
+***place the screenshot from GA after succesfull application of release with this changes***
+![img.png](doc/figures/task_5_2.png)
     
 
 6. Analyze terraform code. Play with terraform plan, terraform graph to investigate different modules.
