@@ -32,9 +32,7 @@ IMPORTANT ❗ ❗ ❗ Please remember to destroy all the resources after each wo
         * role   // follow the instruction above
         * member = "serviceAccount:${var.data_service_account}"
 
-    Link to the modified link: ```modules/data-pipeline/main.tf```
-
-    ![img.png](doc/figures/resource_4.png)
+    ***insert the link to the modified file and terraform snippet here***
 
     Create PR from this branch to **YOUR** master and merge it to make new release. 
     
