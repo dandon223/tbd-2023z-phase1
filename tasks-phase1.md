@@ -103,7 +103,8 @@ Graf udalo się uzyskać poprzez użycie komendy ```terraform graph -plan=plan 
     
 7. Reach YARN UI
    
-   ***place the port and the screenshot of YARN UI here***
+   W konsoli google cloud należy udać się do zasobu dataproc, wejść w szczegóły klastra tbd-cluster i postępować zgodnie z instrukcją pod zakładką interfejsy internetowe. Gdy utworzymy tunel możemy dostać się do YARN UI porzez adres <http://tbd-cluster-m:8088/cluster>.
+   ![img.png](doc/figures/yarn.png)
    
 8. Draw an architecture diagram (e.g. in draw.io) that includes:
     1. VPC topology with service assignment to subnets
