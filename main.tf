@@ -56,7 +56,7 @@ module "dataproc" {
   region       = var.region
   subnet       = module.vpc.subnets[local.notebook_subnet_id].id
   machine_type = var.machine_type_dataproc
-  num_workers = var.num_worker_nodes_dataproc
+  num_workers  = var.num_worker_nodes_dataproc
 }
 
 ## Uncomment for Dataproc batches (serverless)
