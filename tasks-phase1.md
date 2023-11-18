@@ -112,35 +112,146 @@ Graf udalo się uzyskać poprzez użycie komendy ```terraform graph -plan=plan 
     3. List of buckets for disposal
     4. Description of network communication (ports, why it is necessary to specify the host for the driver) of Apache Spark running from Vertex AI Workbech
   
-    ***place your diagram here***
+    Architektura została stworzona na podstawie takich zakładek w google cloud jak topologia sieci, sieć VPN, Dataproc, Compute Engine, Administracja oraz przez pliki .tf dostępne w projekcie.
+
+    Konta serwisu:
+
+    * Konto tbd-terraform ma role owner
+    * iac ma role iam.workloadIdentityUser, które w tym przypadku pozwala na automatyzację uwierzytelnienia podczas uruchamiania github actions
+    * tbd-composer-sa ma role composer.worker, dataproc.editor, iam.serviceAccountUser
+
+    Apache Spark, który uruchomiony jest w naszym przypadku w Vertex AI Workbech wykorzystuje argumenty spark.driver.port oraz spark.driver.host aby nasłuchiwać odpowiedni port oraz maszyny z której będą przychodziły zadania. W tym prjekcie ```spark.driver.host``` ma nazwe ${PROJECT_NAME}-notebook oraz ```spark.driver.port``` 16384 co można zbadać w pliku ```modules/docker_image/resources/Dockerfile```. Dany port nasłuchuje nadzorca, który rozsyła zadania po swoich węzłach roboczych. W naszym przypadku są dostępne dwie takie maszyny.
+
+    ![img.png](doc/figures/diagram.drawio.png)
 
 9. Add costs by entering the expected consumption into Infracost
 
-   ***place the expected consumption you entered here***
+  Zgodnie z <https://www.infracost.io/docs/features/usage_based_resources/> został utworzony plik infracost-usage.yml przy pomocy komendy ```infracost breakdown --sync-usage-file --usage-file infracost-usage.yml --path /code```. Następnie dla wstępnego oszacowania kosztów dla wygenerowanych pozycji zostało podane zużycie równe 1.
 
-   ***place the screenshot from infracost output here***
+   ```
+   # You can use this file to define resource usage estimates for Infracost to use when calculating
+# the cost of usage-based resource, such as AWS S3 or Lambda.
+# `infracost breakdown --usage-file infracost-usage.yml [other flags]`
+# See https://infracost.io/usage-file/ for docs
+version: 0.1
+resource_type_default_usage:
+  google_compute_router_nat:
+    assigned_vms: 1 # Number of VM instances assigned to the NAT gateway
+    monthly_data_processed_gb: 1.0 # Monthly data processed (ingress and egress) by the NAT gateway in GB
+  google_container_registry:
+    storage_gb: 1.0 # Total size of bucket in GB.
+    monthly_class_a_operations: 1 # Monthly number of class A operations (object adds, bucket/object list).
+    monthly_class_b_operations: 1 # Monthly number of class B operations (object gets, retrieve bucket/object metadata).
+    monthly_data_retrieval_gb: 1.0 # Monthly amount of data retrieved in GB.
+    monthly_egress_data_transfer_gb:
+      same_continent: 1.0 # Same continent.
+      worldwide: 1.0 # Worldwide excluding Asia, Australia.
+      asia: 1.0 # Asia excluding China, but including Hong Kong.
+      china: 1.0 # China excluding Hong Kong.
+      australia: 1.0 # Australia.
+  google_storage_bucket:
+    storage_gb: 1.0 # Total size of bucket in GB.
+    monthly_class_a_operations: 0 # Monthly number of class A operations (object adds, bucket/object list).
+    monthly_class_b_operations: 0 # Monthly number of class B operations (object gets, retrieve bucket/object metadata).
+    monthly_data_retrieval_gb: 1.0 # Monthly amount of data retrieved in GB.
+    monthly_egress_data_transfer_gb:
+      same_continent: 1.0 # Same continent.
+      worldwide: 1.0 # Worldwide excluding Asia, Australia.
+      asia: 1.0 # Asia excluding China, but including Hong Kong.
+      china: 1.0 # China excluding Hong Kong.
+      australia: 1.0 # Australia.
+resource_usage:
+  module.vpc.module.cloud-router.google_compute_router_nat.nats["nat-gateway"]:
+    assigned_vms: 0 # Number of VM instances assigned to the NAT gateway
+    monthly_data_processed_gb: 1.0 # Monthly data processed (ingress and egress) by the NAT gateway in GB
+  module.data-pipelines.google_storage_bucket.tbd-code-bucket:
+    storage_gb: 1.0 # Total size of bucket in GB.
+    monthly_class_a_operations: 0 # Monthly number of class A operations (object adds, bucket/object list).
+    monthly_class_b_operations: 0 # Monthly number of class B operations (object gets, retrieve bucket/object metadata).
+    monthly_data_retrieval_gb: 1.0 # Monthly amount of data retrieved in GB.
+    monthly_egress_data_transfer_gb:
+      same_continent: 1.0 # Same continent.
+      worldwide: 1.0 # Worldwide excluding Asia, Australia.
+      asia: 1.0 # Asia excluding China, but including Hong Kong.
+      china: 1.0 # China excluding Hong Kong.
+      australia: 1.0 # Australia.
+  module.data-pipelines.google_storage_bucket.tbd-data-bucket:
+    storage_gb: 1.0 # Total size of bucket in GB.
+    monthly_class_a_operations: 0 # Monthly number of class A operations (object adds, bucket/object list).
+    monthly_class_b_operations: 0 # Monthly number of class B operations (object gets, retrieve bucket/object metadata).
+    monthly_data_retrieval_gb: 1.0 # Monthly amount of data retrieved in GB.
+    monthly_egress_data_transfer_gb:
+      same_continent: 1.0 # Same continent.
+      worldwide: 1.0 # Worldwide excluding Asia, Australia.
+      asia: 1.0 # Asia excluding China, but including Hong Kong.
+      china: 1.0 # China excluding Hong Kong.
+      australia: 1.0 # Australia.
+  module.gcr.google_container_registry.registry:
+    storage_gb: 1.0 # Total size of bucket in GB.
+    monthly_class_a_operations: 0 # Monthly number of class A operations (object adds, bucket/object list).
+    monthly_class_b_operations: 0 # Monthly number of class B operations (object gets, retrieve bucket/object metadata).
+    monthly_data_retrieval_gb: 1.0 # Monthly amount of data retrieved in GB.
+    monthly_egress_data_transfer_gb:
+      same_continent: 1.0 # Same continent.
+      worldwide: 1.0 # Worldwide excluding Asia, Australia.
+      asia: 1.0 # Asia excluding China, but including Hong Kong.
+      china: 1.0 # China excluding Hong Kong.
+      australia: 1.0 # Australia.
+  module.vertex_ai_workbench.google_storage_bucket.notebook-conf-bucket:
+    storage_gb: 1.0 # Total size of bucket in GB.
+    monthly_class_a_operations: 0 # Monthly number of class A operations (object adds, bucket/object list).
+    monthly_class_b_operations: 0 # Monthly number of class B operations (object gets, retrieve bucket/object metadata).
+    monthly_data_retrieval_gb: 1.0 # Monthly amount of data retrieved in GB.
+    monthly_egress_data_transfer_gb:
+      same_continent: 1.0 # Same continent.
+      worldwide: 1.0 # Worldwide excluding Asia, Australia.
+      asia: 1.0 # Asia excluding China, but including Hong Kong.
+      china: 1.0 # China excluding Hong Kong.
+      australia: 1.0 # Australia.
+   ```
+
+   Otrzymane wyniki przedstawiają się następująco.
+
+
+   ![img.png](doc/figures/koszt.png)
 
 10. Some resources are not supported by infracost yet. Estimate manually total costs of infrastructure based on pricing costs for region used in the project. Include costs of cloud composer, dataproc and AI vertex workbanch and them to infracost estimation.
+
+  Po uruchomieniu powyższej komendy z flagą show-skipped znaleźć można nazwy 3 zasobów, które nie są obsługiwane przez infracost.
+  * 1 x google_composer_environment
+  * 1 x google_dataproc_cluster
+  * 1 x google_notebooks_instance
 
     ***place your estimation and references here***
 
     ***what are the options for cost optimization?***
     
-12. Create a BigQuery dataset and an external table
+11. Create a BigQuery dataset and an external table
     
     ***place the code and output here***
    
     ***why does ORC not require a table schema?***
   
-13. Start an interactive session from Vertex AI workbench (steps 7-9 in README):
+12. Start an interactive session from Vertex AI workbench (steps 7-9 in README):
 
-    ***place the screenshot of notebook here***
+    ![img.png](doc/figures/notebook.png)
    
-14. Find and correct the error in spark-job.py
+13. Find and correct the error in spark-job.py
 
-    ***describe the cause and how to find the error***
+  Źródło błędu można znaleźć poprzez logi. Należy w konsoli google cloud przejść do omposera. Następnie do joba composera (airflow) środowiska demo-lab. Dalej należy przejść do dataproc_job. W zakładce graph widać zadanie któ©e zakończyło się błędem (pyspark_task). Należy na nie kliknąć a następnie wybrać log. W nim można znaleźć następujący status:
+  ![img.png](doc/figures/log.png)
 
-15. Additional tasks using Terraform:
+  Należy kliknąć w link. W logach dataproc widać przyczynę. Jest to błędnie podana nazwa kubełka.
+
+  ![img.png](doc/figures/log_2.png)
+
+  Nazwę tą należy zmienić w pliku ```modules/data-pipeline/resources/spark-job.py```. Jest ona podana jako zmienna DATA_BUCKET.
+  ```
+  DATA_BUCKET = "gs://tbd-2023z-9910-data/data/shakespeare/"
+  DATA_BUCKET = "gs://tbd-2023z-300215-data/data/shakespeare/"
+  ```
+
+14. Additional tasks using Terraform:
 
     1. Add support for arbitrary machine types and worker nodes for a Dataproc cluster and JupyterLab instance
 
