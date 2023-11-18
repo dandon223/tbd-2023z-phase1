@@ -227,10 +227,14 @@ resource_usage:
     ***what are the options for cost optimization?***
     
 11. Create a BigQuery dataset and an external table
-    
-    ***place the code and output here***
-   
-    ***why does ORC not require a table schema?***
+
+  Zgodnie z sekcją ```Create a definition file for self-describing formats``` instrukcji <https://cloud.google.com/bigquery/docs/external-table-definition> do stworzenia zewnętrznej tabeli zostały użyte następujące komendy:
+  
+  ```
+  bq mk tbd_test
+  bq mk --table --external_table_definition=@ORC=gs://tbd-2023z-300215-data/data/shakespeare/part-00046-810bb950-eb12-41fd-8f28-296e766b195f-c000.snappy.orc tbd_test.table_test
+  ```
+   Zgodnie z powyższą instrukcją format ORC jest formatem samo opisującym się i daltego nie potrzebuje on dodatkowej schemy.
   
 12. Start an interactive session from Vertex AI workbench (steps 7-9 in README):
 
@@ -250,6 +254,9 @@ resource_usage:
   DATA_BUCKET = "gs://tbd-2023z-9910-data/data/shakespeare/"
   DATA_BUCKET = "gs://tbd-2023z-300215-data/data/shakespeare/"
   ```
+  Po ponownym uruchomieniu zadanie w airflow przechodzi bez błędów.
+
+  ![img.png](doc/figures/pyspark_2.png)
 
 14. Additional tasks using Terraform:
 
