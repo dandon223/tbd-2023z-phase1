@@ -262,11 +262,11 @@ resource_usage:
 
     1. Add support for arbitrary machine types and worker nodes for a Dataproc cluster and JupyterLab instance
 
-    * In main.tf and variables.tf were added num_worker_nodes_dataproc, machine_type_dataproc and machine_type_jupyterlab variables.
-    * In modules/dataproc/main.tf and modules/dataproc/variables.tf num_workers variable was added.
-    * In modules/vertex-ai-workbench/main.tf and modules/vertex-ai-workbench/variables.tf machine_type variable was added.
+    * W main.tf i variables.tf zostały dodane zmienne num_worker_nodes_dataproc, machine_type_dataproc i machine_type_jupyterlab.
+    * W modules/dataproc/main.tf i modules/dataproc/variables.tf została dodana zmienna num_workers.
+    * W modules/vertex-ai-workbench/main.tf i modules/vertex-ai-workbench/variables.tf została dodana zmienna machine_type.
 
-    Link to pull request with important changes <https://github.com/dandon223/tbd-2023z-phase1/pull/11>.
+    Link z pull requestu ze zmienionymi plikami <https://github.com/dandon223/tbd-2023z-phase1/pull/11>.
     
     2. Add support for preemptible/spot instances in a Dataproc cluster
 
