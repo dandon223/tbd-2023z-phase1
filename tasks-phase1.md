@@ -76,7 +76,7 @@ Create PR from this branch to **YOUR** master and merge it to make new release.
     * Zasób google_project_service umożliwia zarządzanie pojedynczą usługą API dla projektu platformy google cloud.
     * Zasób google_compute_subnetwork tworzy podsieć w wirtualnej sieci projektu w podanym regionie.
 
-    Przy użyciu komendy ```terraform plan -out=plan``` w folderze modules/composer wyświetla się plan dla tego modułu oraz jest on zapisany w folderze plan. Należało podać niektóre zmienne ręcznie. Poniżej jest zamieszczona końcówka wyniku komendy.
+    Przy użyciu komendy ```terraform plan -out=plan``` w folderze modules/composer wyświetla się plan dla tego modułu oraz jest on zapisany w folderze plan. Następnie należało podać ręcznie kilka zmiennych. Poniżej jest zamieszczona końcówka wyniku komendy.
 ```
   # module.composer.google_project_iam_member.composer_agent_service_account[0] will be created
   + resource "google_project_iam_member" "composer_agent_service_account" {
