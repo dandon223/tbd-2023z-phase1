@@ -33,3 +33,8 @@ variable "ai_notebook_image_tag" {
   type    = string
   default = "latest"
 }
+
+variable "machine_type" {
+  description = "The machine type for JupyterLab instance"
+  default     = "e2-standard-2"
+}

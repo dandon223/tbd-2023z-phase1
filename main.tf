@@ -45,6 +45,7 @@ module "vertex_ai_workbench" {
   ai_notebook_image_repository = element(split(":", module.jupyter_docker_image.jupyter_image_name), 0)
   ai_notebook_image_tag        = element(split(":", module.jupyter_docker_image.jupyter_image_name), 1)
   ## To remove before workshop
+  machine_type = var.machine_type_jupyterlab
 }
 
 #
@@ -54,7 +55,8 @@ module "dataproc" {
   project_name = var.project_name
   region       = var.region
   subnet       = module.vpc.subnets[local.notebook_subnet_id].id
-  machine_type = "e2-standard-2"
+  machine_type = var.machine_type_dataproc
+  num_workers = var.num_worker_nodes_dataproc
 }
 
 ## Uncomment for Dataproc batches (serverless)
