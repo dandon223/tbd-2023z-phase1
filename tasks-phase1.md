@@ -226,6 +226,13 @@ resource_usage:
    
 
     ***what are the options for cost optimization?***
+    Możliwości optymalizacji kosztów prezentują się następująco:
+    - Sprawdzenie i dostosowanie liczby przydzielonych zasobów, takich jak instancje VM, pamięć, moc obliczeniowa itp., do rzeczywistego obciążenia i potrzeb aplikacji.
+    - Analiza i optymalizacja przesyłu danych pomiędzy różnymi regionami lub kontynentami. Można zoptymalizować koszty, decydując o lokalizacji przechowywania danych w oparciu o częstotliwość ich wykorzystania i lokalizację użytkowników.
+    - Przy obiektach przechowywanych w różnych usługach, można analizować wykorzystanie i przeprowadzić czyszczenie niepotrzebnych danych lub archiwizować rzadko używane obiekty.
+    - Wykorzystanie narzędzi, takich jak Composer, Dataproc czy Notebooks, z zachowaniem elastyczności w uruchamianiu zasobów tylko wtedy, gdy są one potrzebne.
+    - Używanie narzędzi monitorujących do identyfikacji punktów optymalizacji oraz elastycznego skalowania zasobów w zależności od zmieniającego się obciążenia.
+    - Przejście na usługi zarządzane, może pomóc w obniżeniu kosztów utrzymania infrastruktury, ponieważ wiele zadań zarządzania jest wtedy obsługiwanych przez dostawcę usługi.
     
 11. Create a BigQuery dataset and an external table
 
