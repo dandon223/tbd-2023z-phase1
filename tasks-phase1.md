@@ -222,7 +222,8 @@ resource_usage:
   * 1 x google_dataproc_cluster
   * 1 x google_notebooks_instance
 
-    ***place your estimation and references here***
+    ![img.png](doc/figures/est.png)
+   
 
     ***what are the options for cost optimization?***
     
