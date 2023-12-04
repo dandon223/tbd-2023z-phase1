@@ -226,6 +226,7 @@ resource_usage:
    
 
     ***what are the options for cost optimization?***
+    
     Możliwości optymalizacji kosztów prezentują się następująco:
     - Sprawdzenie i dostosowanie liczby przydzielonych zasobów, takich jak instancje VM, pamięć, moc obliczeniowa itp., do rzeczywistego obciążenia i potrzeb aplikacji.
     - Analiza i optymalizacja przesyłu danych pomiędzy różnymi regionami lub kontynentami. Można zoptymalizować koszty, decydując o lokalizacji przechowywania danych w oparciu o częstotliwość ich wykorzystania i lokalizację użytkowników.
