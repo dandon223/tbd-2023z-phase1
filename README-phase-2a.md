@@ -89,15 +89,28 @@ the running instance of your Vertex AI Workbench
 
 7. Explore files created by generator and describe them, including format, content, total size.
 
-   ***Files desccription***
+Stworzone pliki można podejrzeć poprzez google cloud terminal będąc w zakłądce google storage. W zasobniku tbd-2023z-300215-data/tpc-di
+zostało utworzonych 217 plików o łącznej wadze 960.2 MiB. Jest 11 plików z rozrzerzeniem txt. Aż 5 z nich ma rozmiar większy od 100 MiB. Kolumny są w nick rozdzielane znakiem '|'. Dla przykłądu plik TaxRate.txt zawiera wysokość podatku dochodowego dla różnych osób w różnych miejscach.
+
+Poza tym są dwa plik z rozszerzeniem csv. Są to Prospect.csv, która opisuje osoby oraz ich zasoby takie jak wartość ich portfela oraz HR.csv gdzie podane są dane osobowe pracowników oraz do jakiego menadżera są przypisani. W plikach tych występują wartości NUll w niektórych komórkach tabeli.
+
+Jest ponadto jeden plik xml. Jest to CustomerMgmt.xml. Niestety po jego otworzeniu trudno jest zrozumieć to co przedstawia.
+
+Reszta plików to pliki z nazwą zaczynającą się jako 'FINWIRE'. Po obejrzeniu kilku z nich w notatniku można założyć, że charakteryzują się one tym, że kolumny w poszczególnych wierszach zaczynają się w równych odległościach.
 
 8. Analyze tpcdi.py. What happened in the loading stage?
 
-   ***Your answer***
+   Na początku przebiego inicjalizacja bazy danych. Powstają bazy danych 'digen', 'bronze', 'silver' oraz 'gold'. Dzieje się to w metodzie 'get_session'.
+
+   Część odpowiedzialna za ładowanie (loading) obsługuje po kolei różne typy plików. Z każdego pliku tworzony jest obiekt klasy 'StructType'. Dla plików txt oraz csv robi to się za pomocą tworzonych na sztywno schem z wykorzystaniem klas 'StructField' oraz 'StructType'. Dla pliku xml wykorzystywany jest 'col' z modułu pyspark. Pliki typu 'FINWIRE' są wczytywane w całości linia po linii. Następnie wyodrębniane są określone kolumny w oparciu o typy rekordów (CMP, SEC, FIN) i zapisuje każdą ramkę danych jako osobną tabelę typu 'StructType' o nazwach 'cmp', 'sec' oraz 'fin'.
+
+   Następnie tak przerobione obiekty typu 'StructType' są z pomocą metody 'load_csv' zapisywane jako tabele w w Sparku.
+
+   Stworzone logi po zakończeniu działania tego programu sugerują poprawne zakończenie programu i załadowanie wszystkich tabel. Pojawiło się kilka ostrzeżeń dotyczących zasobów tej samej ścieżki dodanych wielokrotnie do rozproszonej pamięci podręcznej oraz o zmianie silnika egzekutora hive. 
 
 9. Using SparkSQL answer: how many table were created in each layer?
 
-   ***SparkSQL command and output***
+   ![img.png](doc/figures/layers.png)
 
 10. Add some 3 more [dbt tests](https://docs.getdbt.com/docs/build/tests) and explain what you are testing. ***Add new tests to your repository.***
 
