@@ -113,3 +113,49 @@ module "data-pipelines" {
   dag_bucket_name      = module.composer.gcs_bucket
   data_bucket_name     = local.data_bucket_name
 }
+
+
+
+
+resource "kubernetes_service" "dbt-task-service" {
+  metadata {
+    name      = "dbt-task-service"
+    namespace = local.composer_work_namespace
+    labels = {
+      app = "dbt-app"
+    }
+  }
+
+  spec {
+    type = "NodePort"
+    selector = {
+      app = "dbt-app"
+    }
+    port {
+      name        = "spark-driver"
+      protocol    = "TCP"
+      port        = local.spark_driver_port
+      target_port = local.spark_driver_port
+      node_port   = local.spark_driver_port
+
+    }
+    port {
+      name        = "spark-block-mgr"
+      protocol    = "TCP"
+      port        = local.spark_blockmgr_port
+      target_port = local.spark_blockmgr_port
+      node_port   = local.spark_blockmgr_port
+    }
+
+  }
+}
+
+resource "google_compute_firewall" "allow-all-internal" {
+  name    = "allow-all-internal"
+  project = var.project_name
+  network = module.vpc.network.network_name
+  allow {
+    protocol = "all"
+  }
+  source_ranges = ["10.0.0.0/8"]
+}
