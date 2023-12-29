@@ -114,7 +114,29 @@ Reszta plików to pliki z nazwą zaczynającą się jako 'FINWIRE'. Po obejrzeni
 
 10. Add some 3 more [dbt tests](https://docs.getdbt.com/docs/build/tests) and explain what you are testing. ***Add new tests to your repository.***
 
-   ***Code and description of your tests***
+   Poniższy test sprawdza czy tabela reference_date ma wpisane poprawne dni tygodnia.
+   ```
+   select 
+    DAY_OF_WEEK_NUM
+   from {{ ref('reference_date') }} 
+   where DAY_OF_WEEK_NUM < 1 or DAY_OF_WEEK_NUM > 7
+   ```
+   Poniższy test sprawdza czy tabela syndicated_prospect nie ma wartości NULL dla kolumny LAST_NAME.
+   ```
+   select LAST_NAME
+   from {{ ref('syndicated_prospect') }} 
+   where LAST_NAME is null
+   ```
+
+   Poniższy test sprawdza czy tabela trades ma poprawne (nie mniejsze od zera) wartości w kolumnie tax.
+   ```
+   select
+    tax
+   from {{ ref('trades') }} 
+   where tax < 0  
+   ```
+   Jak widać na poniższym obrazku, podane wyżej testy przechodzą bez błędów.
+   ![img.png](doc/figures/dbt_test.png)
 
 11. In main.tf update
    ```
